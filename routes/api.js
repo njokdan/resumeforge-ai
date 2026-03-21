@@ -11,10 +11,15 @@ const router = express.Router();
 
 const uploader = multer({ dest: 'uploads/' });
 
-const upload = multer({
-  dest: 'uploads/',
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
-});
+// const upload = multer({
+//   dest: 'uploads/',
+//   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+// });
+
+// Use memory storage instead of disk (Vercel-compatible)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 
 // server.js (or routes/static.js)
 
