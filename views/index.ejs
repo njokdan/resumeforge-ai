@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ResumeForge AI - Beat ATS with AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-success" href="#">ResumeForge AI</a>
+    </div>
+  </nav> -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <!-- Brand / Logo -->
+      <a class="navbar-brand fw-bold text-success" href="/">ResumeForge AI</a>
+
+      <!-- Toggler for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible menu items -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto"> <!-- ms-auto = align right -->
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/faq">FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/terms">Terms</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-success ms-3" href="/login">Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero text-center">
+    <div class="container">
+      <h1 class="display-3 fw-bold mb-3">Land More Interviews in 30 Seconds</h1>
+      <p class="lead mb-5">
+        Upload your resume + job description.<br>
+        <strong>AI instantly optimizes your resume, crafts a matching cover letter,</strong><br>
+        and gives expert suggestions to make your LinkedIn profile recruiter-ready.
+      </p>
+      <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-body p-5">
+          <form id="optimizeForm" enctype="multipart/form-data">
+            <!-- Resume Upload -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Your Resume (PDF or TXT)</label>
+              <div class="border border-2 border-dashed p-5 text-center rounded-4" id="dropZone">
+                <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-success"></i>
+                <p class="mb-1">Drop file here or</p>
+                <input type="file" id="resumeFile" accept=".pdf,.txt" class="d-none">
+                <button type="button" class="btn btn-outline-success" onclick="document.getElementById('resumeFile').click()">Choose File</button>
+                <p id="fileName" class="mt-3 text-success"></p>
+              </div>
+            </div>
+
+            <!-- Job Description -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Job Description</label>
+              <textarea id="jobDesc" class="form-control bg-dark text-light" rows="6" placeholder="Paste the full job description here..." required></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg px-5">
+              <i class="fas fa-magic"></i> Optimize with AI
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Section (hidden initially) -->
+  <div id="resultsSection" class="container my-5 pt-5" style="display:none;">
+    
+    <div class="mt-5">
+        <ul class="nav nav-tabs" id="resultsTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="resume-tab" data-bs-toggle="tab" data-bs-target="#resumePanel" type="button" role="tab">Resume Optimization</button>
+            </li>
+            <li class="nav-item" role="presentation">
+            <button class="nav-link" id="coverletter-tab" data-bs-toggle="tab" data-bs-target="#coverPanel" type="button" role="tab">Generate Cover Letter</button>
+            </li>
+            <!-- Inside tab list -->
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="linkedin-tab" data-bs-toggle="tab" data-bs-target="#linkedinPanel" type="button" role="tab" aria-controls="linkedinPanel" aria-selected="false">LinkedIn Profile Optimizer</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4">
+            <div class="tab-pane fade show active" id="resumePanel" role="tabpanel">
+            <!-- Existing resume results here -->
+              <h2 class="text-center text-success mb-5">Your Optimization Results</h2>
+
+              <div class="row justify-content-center g-4">
+                <div class="col-md-4">
+                  <div class="card text-center p-4 shadow-lg">
+                    <h4>ATS Score</h4>
+                    <h2 id="atsScore" class="text-success display-4 fw-bold">92%</h2>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div id="aiResults" class="card p-4 shadow-lg"></div>
+                </div>
+              </div>
+              <div class="text-center mt-5">
+                  <button id="generateFullResumeBtn" class="btn btn-lg btn-outline-primary px-5 py-3">
+                    <i class="fas fa-file-alt"></i> Generate Optimized Resume
+                  </button>
+                  <button id="exportPdfBtn" class="btn btn-success btn-lg px-5 py-3">
+                      <i class="fas fa-file-pdf me-2"></i> Export Report as PDF
+                  </button>
+              </div>
+            </div>
+
+            <!-- Full Optimized Resume Preview + Downloads (hidden initially) -->
+          <div id="fullResumeSection" class="mt-5" style="display: none;">
+            <h5 class="text-success mb-3">Your Fully Optimized Resume</h5>
+            <div id="fullResumePreview" class="bg-dark p-4 rounded mb-4" style="white-space: pre-wrap; font-family: 'Times New Roman', serif; line-height: 1.6;"></div>
+            
+            <div class="text-center">
+              <button id="downloadResumePdfBtn" class="btn btn-success me-3">
+                <i class="fas fa-file-pdf"></i> Download PDF
+              </button>
+              <button id="downloadResumeDocBtn" class="btn btn-primary">
+                <i class="fas fa-file-word"></i> Download DOCX
+              </button>
+            </div>
+          </div>
+
+            <div class="tab-pane fade" id="coverPanel" role="tabpanel">
+              <div class="card p-4">
+                  <h5 class="text-success mb-3">📄 AI Cover Letter Generator</h5>
+                  <div class="mb-3">
+                  <label class="form-label">Tone</label>
+                  <select id="toneSelect" class="form-select bg-dark text-light">
+                      <option value="professional">Professional & Confident</option>
+                      <option value="enthusiastic">Enthusiastic & Energetic</option>
+                      <option value="conversational">Conversational & Warm</option>
+                  </select>
+                  </div>
+                  <div class="mb-3">
+                  <label class="form-label">Length</label>
+                  <select id="lengthSelect" class="form-select bg-dark text-light">
+                      <option value="short">Short (~200 words)</option>
+                      <option value="medium" selected>Medium (~300–400 words)</option>
+                      <option value="long">Detailed (~500+ words)</option>
+                  </select>
+                  </div>
+                  <button id="generateCoverBtn" class="btn btn-primary btn-lg">
+                  <i class="fas fa-file-alt"></i> Generate Cover Letter
+                  </button>
+                  <div id="coverLoading" class="loading d-flex align-items-center justify-content-center" style="display:none;">
+                  <div class="text-center">
+                      <div class="spinner-border text-success" style="width:3rem;height:3rem;"></div>
+                      <h5 class="mt-3">Crafting your personalized cover letter...</h5>
+                  </div>
+                  </div>
+                  <div id="coverResult" class="mt-4 bg-dark p-4 rounded" style="display:none; white-space: pre-wrap;"></div>
+                  <div id="coverActions" class="mt-3" style="display:none;">
+                  <button id="copyCoverBtn" class="btn btn-outline-success me-2"><i class="fas fa-copy"></i> Copy</button>
+                  <button id="exportCoverPdfBtn" class="btn btn-outline-success"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                  </div>
+              </div>
+            </div>
+
+            <!-- New tab panel -->
+            <div class="tab-pane fade" id="linkedinPanel" role="tabpanel" aria-labelledby="linkedin-tab">
+              <div class="card p-4">
+                  <h5 class="text-success mb-3">🔗 Optimize Your LinkedIn Profile</h5>
+                  <p class="text-muted mb-4">Paste your current LinkedIn sections below or upload a text/PDF export of your profile. AI will analyze and suggest improvements for remote developer roles.</p>
+
+                  <!-- Option A: Manual paste (most users will use this) -->
+                  <div class="mb-4">
+                    <label for="linkedinHeadline" class="form-label fw-bold">Headline</label>
+                    <input type="text" id="linkedinHeadline" class="form-control bg-dark text-light" placeholder="e.g. Full Stack Developer | React, Node.js, Remote">
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="linkedinAbout" class="form-label fw-bold">About Section</label>
+                    <textarea id="linkedinAbout" class="form-control bg-dark text-light" rows="6" placeholder="Paste your current About text here..."></textarea>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="linkedinExperience" class="form-label fw-bold">Experience (bullets or descriptions)</label>
+                    <textarea id="linkedinExperience" class="form-control bg-dark text-light" rows="8" placeholder="Paste key experience entries or bullets...\nExample:\n• Built scalable SaaS platform using Next.js and Node.js\n• Reduced API response time by 45%..."></textarea>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="linkedinSkills" class="form-label fw-bold">Skills (comma-separated or list)</label>
+                    <textarea id="linkedinSkills" class="form-control bg-dark text-light" rows="3" placeholder="React, Node.js, TypeScript, Remote Collaboration, AWS..."></textarea>
+                  </div>
+
+                  <!-- Option B: Upload file (TXT or PDF export of profile) -->
+                  <div class="mb-4">
+                    <label class="form-label fw-bold">Or upload your LinkedIn profile export (TXT/PDF)</label>
+                    <div class="border border-2 border-dashed p-4 text-center rounded-4" id="linkedinDropZone">
+                      <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-success"></i>
+                      <p class="mb-1">Drop file here or</p>
+                      <input type="file" id="linkedinFile" accept=".pdf,.txt" class="d-none">
+                      <button type="button" class="btn btn-outline-success" onclick="document.getElementById('linkedinFile').click()">Choose File</button>
+                      <p id="linkedinFileName" class="mt-3 text-success"></p>
+                    </div>
+                  </div>
+
+                  <button id="optimizeLinkedinBtn" class="btn btn-primary btn-lg">
+                    <i class="fas fa-magic"></i> Optimize LinkedIn Profile
+                  </button>
+
+                <!-- Loading for LinkedIn -->
+                <div id="linkedinLoading" class="loading d-flex align-items-center justify-content-center" style="display:none;">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" style="width:3rem;height:3rem;"></div>
+                    <h5 class="mt-3">Optimizing your LinkedIn profile...</h5>
+                  </div>
+                </div>
+
+                <!-- Results -->
+                <div id="linkedinResult" class="mt-4 bg-dark p-4 rounded" style="display:none;"></div>
+
+                <!-- Actions -->
+                <div id="linkedinActions" class="mt-3" style="display:none;">
+                  <button id="copyLinkedinBtn" class="btn btn-outline-success me-2"><i class="fas fa-copy"></i> Copy All Suggestions</button>
+                </div>
+              </div>
+            </div>
+
+        </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading" class="loading d-flex align-items-center justify-content-center">
+    <div class="text-center">
+      <div class="spinner-border text-success" style="width: 4rem; height: 4rem;"></div>
+      <h4 class="mt-4 text-white">AI is optimizing your resume...</h4>
+      <p class="text-muted">This usually takes 8-12 seconds</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- jsPDF core (UMD build - works with plain script tags) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Optional: if you want jspdf-autotable for tables later -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script> -->
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

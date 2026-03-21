@@ -1,0 +1,81 @@
+<%- include('partials/header') %>
+
+<div class="container py-5">
+  <h1 class="display-5 fw-bold text-center text-success mb-5">Frequently Asked Questions</h1>
+
+  <div class="accordion" id="faqAccordion">
+
+    <div class="accordion-item bg-dark border-0 mb-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+          Is ResumeForge AI really free?
+        </button>
+      </h2>
+      <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted">
+          Yes — core features (resume optimization, cover letter generation, LinkedIn suggestions) are completely free.<br>
+          We may add premium features later (unlimited generations, priority AI models, etc.), but the current version will remain free.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item bg-dark border-0 mb-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+          How safe is my data?
+        </button>
+      </h2>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted">
+          We take privacy very seriously.<br>
+          Uploaded resumes are processed temporarily and deleted immediately after analysis.<br>
+          We do not store your personal data or share it with third parties.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item bg-dark border-0 mb-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+          Which AI models power ResumeForge?
+        </button>
+      </h2>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted">
+          We use Groq (Llama 3.3), Google Gemini, and OpenRouter fallbacks.<br>
+          This ensures fast, reliable, and high-quality output even during high demand.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item bg-dark border-0 mb-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+          Can I use this for non-tech roles?
+        </button>
+      </h2>
+      <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted">
+          Yes — while optimized for remote tech jobs, the AI works well for most professional roles.<br>
+          The more specific your job description, the better the results.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item bg-dark border-0">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+          How do I contact support?
+        </button>
+      </h2>
+      <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted">
+          Use the <a href="/contact" class="text-success">Contact Us</a> page or DM us on X @ndaninfoassure.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>
