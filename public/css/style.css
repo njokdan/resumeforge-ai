@@ -67,6 +67,23 @@ a:hover {
   z-index: 1000;
 }
 
+/* Dropdown hover & active state */
+.dropdown-item {
+  color: #e2e8f0;
+  transition: all 0.2s;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #334155;
+  color: #00ff9d;
+}
+
+.dropdown-menu {
+  border: 1px solid #334155;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
 /* .hero {
   background: url('https://picsum.photos/1920/1080?random=tech') no-repeat center/cover;
   height: 100vh;
