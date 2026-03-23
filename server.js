@@ -47,6 +47,11 @@ app.get('/privacy', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 ResumeForge AI running on http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`🚀 ResumeForge AI running on http://localhost:${PORT}`);
+// });
+
+console.log('Server.js loaded successfully');
+console.log('Exported app:', !!module.exports);
+
+module.exports = app;
