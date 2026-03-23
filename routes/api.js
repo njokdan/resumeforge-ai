@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 
 // server.js (or routes/static.js)
 
-router.post('/optimize', upload.single('resume'), async (req, res) => {
+router.post('/optimizes', upload.single('resume'), async (req, res) => {
   try {
     let resumeText = '';
 
@@ -74,7 +74,41 @@ router.post('/optimize', upload.single('resume'), async (req, res) => {
   }
 });
 
-router.post('/generate-cover', upload.single('resume'), async (req, res) => {
+router.post('/optimize', upload.single('resume'), async (req, res) => {
+  try {
+    let resumeText = '';
+
+    if (req.file) {
+      const buffer = req.file.buffer;  // ← file is now in memory (Buffer)
+
+      if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
+        // Use your PDF parser on buffer (no filePath needed)
+        const parser = new PDFParse({});
+        await parser.load({ data: buffer });
+        const textResult = await parser.getText();
+        resumeText = textResult.text;
+      } else {
+        resumeText = buffer.toString('utf8');
+      }
+    } else {
+      resumeText = '';
+    }
+
+    const jobDesc = req.body.jobDesc || "";
+    const result = await optimizeResume(resumeText, jobDesc);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Optimization error:', error);
+    res.status(500).json({ 
+      error: 'Optimization failed', 
+      details: error.message 
+    });
+  }
+  // No cleanup needed — no disk file was created
+});
+
+router.post('/generate-covers', upload.single('resume'), async (req, res) => {
   try {
     let resumeText = ''; // Reuse same parsing logic as /optimize
     if (req.file) {
@@ -100,6 +134,44 @@ router.post('/generate-cover', upload.single('resume'), async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Cover letter generation failed' });
   }
+});
+
+router.post('/generate-cover', upload.single('resume'), async (req, res) => {
+  try {
+    let resumeText = '';
+
+    if (req.file) {
+      // File is now in memory → use buffer directly
+      const buffer = req.file.buffer;
+
+      if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
+        const { PDFParse } = require('pdf-parse');
+        const parser = new PDFParse({});
+        await parser.load({ data: buffer });
+        const textResult = await parser.getText();
+        resumeText = textResult.text;
+      } else {
+        resumeText = buffer.toString('utf8');
+      }
+    } else {
+      resumeText = '';
+    }
+
+    const jobDesc = req.body.jobDesc || "";
+    const tone = req.body.tone || "professional";
+    const length = req.body.length || "medium";
+
+    const coverLetter = await generateCoverLetter(resumeText, jobDesc, tone, length);
+
+    res.json({ cover_letter: coverLetter });
+  } catch (error) {
+    console.error('Cover letter generation error:', error);
+    res.status(500).json({ 
+      error: 'Cover letter generation failed', 
+      details: error.message || 'Unknown error' 
+    });
+  }
+  // No need for fs.unlinkSync — no file was written to disk
 });
 
 router.post('/optimize-linkedin', async (req, res) => {
