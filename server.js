@@ -40,6 +40,13 @@ app.get('/terms', (req, res) => {
   res.render('terms', { title: 'Terms of Service - ResumeForge AI' });
 });
 
+// In server.js (after other static routes)
+app.get('/privacy', (req, res) => {
+  res.render('privacy', { 
+    title: 'Privacy Policy - ResumeForge AI' 
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 ResumeForge AI running on http://localhost:${PORT}`);
 });
