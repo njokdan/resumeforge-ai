@@ -29,6 +29,44 @@ const upload = multer({
 
 // server.js (or routes/static.js)
 
+// router.post('/optimize', upload.single('resume'), async (req, res) => {
+//   let filePath = null;
+
+//   try {
+//     let resumeText = '';
+
+//     if (req.file) {
+//       filePath = req.file.path;
+//       const buffer = fs.readFileSync(filePath);
+
+//       if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
+//         // v1.1.1 style – direct call
+//         const data = await require('pdf-parse')(buffer);
+//         resumeText = data.text;
+//       } else {
+//         resumeText = buffer.toString('utf8');
+//       }
+//     } else {
+//       resumeText = '';  // no file uploaded → continue with jobDesc only
+//     }
+
+//     const jobDesc = req.body.jobDesc || "";
+//     const result = await optimizeResume(resumeText, jobDesc);
+
+//     res.json(result);
+//   } catch (error) {
+//     console.error('Optimization error:', error);
+//     res.status(500).json({ 
+//       error: 'Optimization failed', 
+//       details: error.message || 'Unknown error' 
+//     });
+//   } finally {
+//     if (filePath && fs.existsSync(filePath)) {
+//       fs.unlinkSync(filePath);
+//     }
+//   }
+// });
+
 router.post('/optimize', upload.single('resume'), async (req, res) => {
   let filePath = null;
 
@@ -37,17 +75,24 @@ router.post('/optimize', upload.single('resume'), async (req, res) => {
 
     if (req.file) {
       filePath = req.file.path;
-      const buffer = fs.readFileSync(filePath);
 
-      if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
-        // v1.1.1 style – direct call
-        const data = await require('pdf-parse')(buffer);
-        resumeText = data.text;
+      // Safety guard #1: filePath must exist and be a string
+      if (!filePath || typeof filePath !== 'string' || !fs.existsSync(filePath)) {
+        console.warn('No valid file path received – skipping file read');
+        resumeText = ''; // fallback to no resume text
       } else {
-        resumeText = buffer.toString('utf8');
+        const buffer = fs.readFileSync(filePath);
+
+        if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
+          const data = await require('pdf-parse')(buffer); // v1.1.1 style
+          resumeText = data.text;
+        } else {
+          resumeText = buffer.toString('utf8');
+        }
       }
     } else {
-      resumeText = '';  // no file uploaded → continue with jobDesc only
+      // No file uploaded at all
+      resumeText = '';
     }
 
     const jobDesc = req.body.jobDesc || "";
@@ -58,11 +103,16 @@ router.post('/optimize', upload.single('resume'), async (req, res) => {
     console.error('Optimization error:', error);
     res.status(500).json({ 
       error: 'Optimization failed', 
-      details: error.message || 'Unknown error' 
+      details: error.message || 'Unknown error'
     });
   } finally {
-    if (filePath && fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    // Safe cleanup
+    if (filePath && typeof filePath === 'string' && fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (unlinkErr) {
+        console.warn('Cleanup failed:', unlinkErr.message);
+      }
     }
   }
 });
