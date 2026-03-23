@@ -5,6 +5,9 @@ yarn-error.log
 yarn-debug.log
 .pnpm-debug.log
 
+uploads/
+
+
 # Build / dist folders
 dist/
 build/

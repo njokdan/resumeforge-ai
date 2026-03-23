@@ -11,8 +11,14 @@ const router = express.Router();
 
 const uploader = multer({ dest: 'uploads/' });
 
+// const upload = multer({
+//   dest: 'uploads/',
+//   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+// });
+
+// Use MEMORY storage – no disk writes, perfect for Vercel
 const upload = multer({
-  dest: 'uploads/',
+  storage: multer.memoryStorage(),  // ← key change
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
 });
 
