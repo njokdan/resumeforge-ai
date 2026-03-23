@@ -9,7 +9,7 @@ const { optimizeResume, generateCoverLetter, optimizeLinkedinProfile } = require
 
 const router = express.Router();
 
-const uploader = multer({ dest: 'uploads/' });
+//const uploader = multer({ dest: 'uploads/' });
 
 // const upload = multer({
 //   dest: 'uploads/',
